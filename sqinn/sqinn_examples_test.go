@@ -6,7 +6,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/cvilsmeier/sqinn-go/sqinn"
+	"github.com/rferrazz/sqinn-go/sqinn"
 )
 
 // NOTE: For running the examples you must have sqinn installed

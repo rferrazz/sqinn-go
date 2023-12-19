@@ -3,7 +3,7 @@ package sqinn_test
 import (
 	"testing"
 
-	"github.com/cvilsmeier/sqinn-go/sqinn"
+	"github.com/rferrazz/sqinn-go/sqinn"
 )
 
 func TestAnyValue(t *testing.T) {

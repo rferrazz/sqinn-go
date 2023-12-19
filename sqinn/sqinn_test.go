@@ -5,7 +5,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/cvilsmeier/sqinn-go/sqinn"
+	"github.com/rferrazz/sqinn-go/sqinn"
 )
 
 // NOTE: For running the tests you must have

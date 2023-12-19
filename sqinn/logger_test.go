@@ -5,7 +5,7 @@ import (
 	"log"
 	"testing"
 
-	"github.com/cvilsmeier/sqinn-go/sqinn"
+	"github.com/rferrazz/sqinn-go/sqinn"
 )
 
 func TestStdLogger(t *testing.T) {

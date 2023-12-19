@@ -8,7 +8,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/cvilsmeier/sqinn-go/sqinn"
+	"github.com/rferrazz/sqinn-go/sqinn"
 )
 
 // Simple sqinn-go usage.

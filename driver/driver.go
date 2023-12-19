@@ -7,7 +7,7 @@ import (
 	"net/url"
 	"os"
 
-	"github.com/cvilsmeier/sqinn-go/sqinn"
+	"github.com/rferrazz/sqinn-go/sqinn"
 )
 
 var driverName = "sqlite3"
