@@ -90,7 +90,7 @@ func (s *statement) NumInput() int {
 
 func (s *statement) Exec(args []driver.Value) (driver.Result, error) {
 	for i, v := range args {
-		if err := s.sqinn.Bind(i, v); err != nil {
+		if err := s.sqinn.Bind(i+1, v); err != nil {
 			return nil, err
 		}
 	}
@@ -119,7 +119,7 @@ func (s *statement) Query(args []driver.Value) (driver.Rows, error) {
 	}
 
 	for i, v := range args {
-		if err := s.sqinn.Bind(i, v); err != nil {
+		if err := s.sqinn.Bind(i+1, v); err != nil {
 			return nil, err
 		}
 	}
