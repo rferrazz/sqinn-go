@@ -1,11 +1,10 @@
 
 ![Sqinn](logo-200.png "Sqinn")
 
-[![GoDoc Reference](https://godoc.org/github.com/cvilsmeier/sqinn-go/sqinn?status.svg)](http://godoc.org/github.com/cvilsmeier/sqinn-go/sqinn)
-[![Go Report Card](https://goreportcard.com/badge/github.com/cvilsmeier/sqinn-go)](https://goreportcard.com/report/github.com/cvilsmeier/sqinn-go)
-[![Build Status](https://github.com/cvilsmeier/sqinn-go/actions/workflows/go-linux.yml/badge.svg)](https://github.com/cvilsmeier/sqinn-go/actions/workflows/go-linux.yml)
+[![GoDoc Reference](https://godoc.org/github.com/rferrazz/sqinn-go/sqinn?status.svg)](http://godoc.org/github.com/rferrazz/sqinn-go/sqinn)
+[![Go Report Card](https://goreportcard.com/badge/github.com/rferrazz/sqinn-go)](https://goreportcard.com/report/github.com/rferrazz/sqinn-go)
+[![Build Status](https://github.com/rferrazz/sqinn-go/actions/workflows/go-linux.yml/badge.svg)](https://github.com/rferrazz/sqinn-go/actions/workflows/go-linux.yml)
 [![License: Unlicense](https://img.shields.io/badge/license-Unlicense-blue.svg)](http://unlicense.org/)
-[![Mentioned in Awesome Go](https://awesome.re/mentioned-badge.svg)](https://github.com/avelino/awesome-go)
 
 Sqinn-Go is a Go (Golang) library for accessing SQLite databases without cgo.
 It uses Sqinn <https://github.com/cvilsmeier/sqinn> under the hood.
@@ -125,9 +124,9 @@ Numbers are given in milliseconds, lower numbers are better.
     large/N=2000         119        87       341
     large/N=4000         361       322       760
     large/N=8000         701       650      1531
-    concurrent/N=2      1332       865       951    
-    concurrent/N=4      1505       989      1207    
-    concurrent/N=8      2347      1557      2044     
+    concurrent/N=2      1332       865       951
+    concurrent/N=4      1505       989      1207
+    concurrent/N=8      2347      1557      2044
 
 
 See <https://github.com/cvilsmeier/sqinn-go-bench> for details.
