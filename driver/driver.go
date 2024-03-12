@@ -130,6 +130,10 @@ func (s *statement) Query(args []driver.Value) (driver.Rows, error) {
 	}
 	res.lastRowReached = !more
 
+	if res.lastRowReached {
+		return nil, sql.ErrNoRows
+	}
+
 	count, err := s.sqinn.ColumnCount()
 	if err != nil {
 		return nil, err
