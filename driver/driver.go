@@ -32,7 +32,9 @@ func (d sqlite) Open(name string) (driver.Conn, error) {
 		return nil, err
 	}
 
-	if _, err := os.Stat(tokens.Path); os.IsNotExist(err) {
+	if tokens.Path == "" {
+		tokens.Path = ":memory:"
+	} else if _, err := os.Stat(tokens.Path); os.IsNotExist(err) {
 		return nil, err
 	}
 
