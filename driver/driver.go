@@ -62,7 +62,11 @@ func (c *connection) Close() error {
 }
 
 func (c *connection) Begin() (driver.Tx, error) {
-	return nil, nil
+	return c.begin()
+}
+
+func (c *connection) begin() (driver.Tx, error) {
+	return newTx(c)
 }
 
 type result struct {
@@ -202,4 +206,35 @@ func (r *rows) Next(dest []driver.Value) error {
 	r.lastRowReached = !more
 
 	return nil
+}
+
+type tx struct {
+	c *connection
+}
+
+func newTx(c *connection) (*tx, error) {
+	r := &tx{c: c}
+
+	sql := "begin transaction"
+	if _, err := r.c.sqinn.ExecOne(sql); err != nil {
+		return nil, err
+	}
+	return r, nil
+}
+
+// Commit implements driver.Tx.
+func (t *tx) Commit() (err error) {
+	_, err = t.c.sqinn.ExecOne("commit")
+	return
+}
+
+// Rollback implements driver.Tx.
+func (t *tx) Rollback() (err error) {
+	_, err = t.c.sqinn.ExecOne("rollback")
+	return
+}
+
+func (t *tx) Exec(sql string) (err error) {
+	_, err = t.c.sqinn.ExecOne(sql)
+	return
 }
