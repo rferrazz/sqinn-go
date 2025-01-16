@@ -1,11 +1,13 @@
 package driver
 
 import (
+	"context"
 	"database/sql"
 	"database/sql/driver"
 	"io"
 	"net/url"
 	"os"
+	"strings"
 
 	"github.com/rferrazz/sqinn-go/sqinn"
 )
@@ -18,6 +20,13 @@ func init() {
 	if driverName != "" {
 		sql.Register(driverName, sqlite(0))
 	}
+}
+
+func parseMultiQuery(query string) []string {
+	query = strings.TrimSuffix(query, ";")
+	query = strings.TrimSpace(query)
+	queries := strings.Split(strings.ReplaceAll(query, "\n", ""), ";")
+	return queries
 }
 
 func (d sqlite) Open(name string) (driver.Conn, error) {
@@ -61,6 +70,42 @@ func (c *connection) Close() error {
 	return c.sqinn.Terminate()
 }
 
+func (c *connection) ExecContext(_ context.Context, query string, args []driver.NamedValue) (dr driver.Result, err error) {
+	return c.exec(query, args)
+}
+
+func (c *connection) exec(query string, args []driver.NamedValue) (dr driver.Result, err error) {
+	for _, query := range parseMultiQuery(query) {
+		var s driver.Stmt
+		s, err = c.Prepare(query)
+		if err != nil {
+			return nil, err
+		}
+
+		defer func() {
+			if err2 := s.Close(); err2 != nil && err == nil {
+				err = err2
+			}
+		}()
+
+		// Convert NamedValue slice to Value slice
+		values := make([]driver.Value, len(args))
+		for i, nv := range args {
+			values[i] = nv.Value
+		}
+
+		dr, err = s.(*statement).Exec(values)
+		if err != nil {
+			return
+		}
+
+		if err := s.(*statement).sqinn.Finalize(); err != nil {
+			return nil, err
+		}
+	}
+	return
+}
+
 func (c *connection) Begin() (driver.Tx, error) {
 	return c.begin()
 }
@@ -100,6 +145,7 @@ func (s *statement) Exec(args []driver.Value) (driver.Result, error) {
 			return nil, err
 		}
 	}
+
 	if _, err := s.sqinn.Step(); err != nil {
 		return nil, err
 	}
@@ -216,7 +262,7 @@ func newTx(c *connection) (*tx, error) {
 	r := &tx{c: c}
 
 	sql := "begin transaction"
-	if _, err := r.c.sqinn.ExecOne(sql); err != nil {
+	if _, err := r.c.sqinn.Query(sql, nil, nil); err != nil {
 		return nil, err
 	}
 	return r, nil
@@ -224,17 +270,12 @@ func newTx(c *connection) (*tx, error) {
 
 // Commit implements driver.Tx.
 func (t *tx) Commit() (err error) {
-	_, err = t.c.sqinn.ExecOne("commit")
+	_, err = t.c.sqinn.Query("commit", nil, nil)
 	return
 }
 
 // Rollback implements driver.Tx.
 func (t *tx) Rollback() (err error) {
-	_, err = t.c.sqinn.ExecOne("rollback")
-	return
-}
-
-func (t *tx) Exec(sql string) (err error) {
-	_, err = t.c.sqinn.ExecOne(sql)
+	_, err = t.c.sqinn.Query("rollback", nil, nil)
 	return
 }
